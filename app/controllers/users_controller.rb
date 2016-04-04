@@ -37,16 +37,16 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     logger.debug "%%%%%"
-  #  render text: "Thanks for sending a POST request with cURL! Payload: #{request.body.read}"
+    render text: "Thanks for sending a POST request with cURL! Payload: #{request.body.read}"
   #  @user = User.new(user_params)
-    @user = User.where(email: params[:email])
+  ##  @user = User.where(email: params[:email])
  # @user = User.new(params[:user])
   #@user.temp_password = Devise.friendly_token
   
    #   if @user.email
     #    render :json {error: "HERE; check the submitted email address"}
      # else
-         render :json => @user
+    ##     render :json => @user
       # end
 
     #render :json => @user
