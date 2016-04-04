@@ -11,11 +11,11 @@ class UsersController < ApplicationController
  #       render text: "Thanks for sending a GETTING request with cURL! Payload: #{request.body.read}"
  #   @users = User.all
       @user = User.find(params[:email])
-      if user
+   #   if user
         render :json => @user
-      else
-        logger.debug "no user"
-       end
+    #  else
+     #   logger.debug "no user"
+      # end
   end
 
   # GET /users/1
@@ -43,11 +43,11 @@ class UsersController < ApplicationController
  # @user = User.new(params[:user])
   #@user.temp_password = Devise.friendly_token
   
-      if @user.email
-        render :json {error: "HERE; check the submitted email address"}
-      else
+   #   if @user.email
+    #    render :json {error: "HERE; check the submitted email address"}
+     # else
          render :json => @user
-       end
+      # end
 
     #render :json => @user
 
