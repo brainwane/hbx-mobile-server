@@ -1,0 +1,26 @@
+ *   Trying 10.36.27.206...
+* Connected to 10.36.27.206 (10.36.27.206) port 3000 (#0)
+> GET /employers/employer_profiles/57167b16ea497f05d2000009?tab=home HTTP/1.1
+> Host: 10.36.27.206:3000
+> User-Agent: curl/7.46.0
+> Accept: */*
+> Cookie: _session_id=bgm0Fks7B6IX3X-O9wgwNEudBxM
+> 
+< HTTP/1.1 200 OK 
+< X-Frame-Options: SAMEORIGIN
+< X-Xss-Protection: 1; mode=block
+< X-Content-Type-Options: nosniff
+< Content-Type: text/html; charset=utf-8
+< Etag: W/"9e16162f9f10f01bd9c47cbcead91b30"
+< Cache-Control: max-age=0, private, must-revalidate
+< X-Request-Id: cde0f93b-c5da-421f-bc99-bee02919f360
+< X-Runtime: 0.531608
+< Server: WEBrick/1.3.1 (Ruby/2.2.3/2015-08-18)
+< Date: Tue, 26 Apr 2016 19:23:12 GMT
+< Content-Length: 18900
+< Connection: Keep-Alive
+< 
+{ [1448 bytes data]
+######################################################################## 100.0%* Connection #0 to host 10.36.27.206 left intact
+
+ Status: pid 6441 exit 0

@@ -16,5 +16,5 @@
 !/log/.keep
 /tmp
 
-
+test_scripts/out
 config/secrets.yml
