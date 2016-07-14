@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   post 'login' => 'visits#create'
+  post 'login/:id' => 'visits#answer_security_question'
   get 'login' => 'visits#create' #just for debugging, TODO REMOVE
 
   # The priority is based upon order of creation: first created -> highest priority.

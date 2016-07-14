@@ -11,13 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160405172310) do
+ActiveRecord::Schema.define(version: 20160714180414) do
 
   create_table "visits", force: :cascade do |t|
     t.string   "email"
     t.string   "device_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "cookies"
+    t.string   "hidden_values"
+    t.string   "hidden_fields"
   end
 
 end
