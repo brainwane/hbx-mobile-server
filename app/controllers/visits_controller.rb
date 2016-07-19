@@ -51,11 +51,18 @@ class ProdAndTestServerConfig
 		'https://enroll.dchealthlink.com/'
 	end
 
+	def cookie_domain
+		Rails.configuration.session_id_cookie_domain
+	end
+
+	def cookie_name
+		Rails.configuration.session_id_cookie_name
+	end
+
 
 	def username_password_post(email, password, params)
-		print "In do_login\n"
+		print "ProdAndTestServerConfig.user_password_post\n"
 		mechanize = Mechanize.new
-		print "gem versions: \n"
 		mechanize.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 		print "server: #{iam_home}\n"
 		req = mechanize.get(iam_home)
@@ -186,8 +193,8 @@ class ProdAndTestServerConfig
 		cookies = mechanize.cookies
 		cookies.each do |c|
 		  print "domain #{c}\n"
-		  if c.domain == 'enroll-preprod.dchbx.org'
-		    if (c.name == '_session_id')
+		  if c.domain == cookie_domain
+		    if c.name == cookie_name
 		      session_id = c.value
 		    end
 		  end
@@ -203,11 +210,114 @@ end
 
 
 class DevServerConfig
-	def username_password_post(username, password)
+	def home
+		Rails.configuration.mobile_url_home
+	end
+
+	def login_form
+		Rails.configuration.mobile_url_login_form
+	end
+
+	def login
+		Rails.configuration.mobile_url_login
+	end
+
+	def enroll_url
+		Rails.configuration.enroll_url
+	end
+
+	def cookie_domain
+		Rails.configuration.session_id_cookie_domain
+	end
+
+	def cookie_name
+		Rails.configuration.session_id_cookie_name
+	end
+
+	def username_password_post(username, password, params)
+		print "In DevServerConfig.user_password_post\n"
+		mechanize = Mechanize.new
+		mechanize.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+		mechanize.redirection_limit = (10000)
+		print "server: #{home}\n"
+		req = mechanize.get(home)
+		print "got home page: #{req.code}\n"
+		if (req.code.to_i >= 400)
+		  print "error #{req.code}\n"
+		  abort "error getting login page"
+		end
+		
+		print "getting login form\n"
+		req = mechanize.get(login_form)
+		print "got login form: #{req.code}\n"
+		if (req.code.to_i >= 400)
+		  print "error #{req.code}\n"
+		  abort "error getting login page"
+		end
+
+
+		body = req.body
+		matches = /<meta name=\"csrf-token\" content=\"([^"]+)\"/.match(body)
+		print "authenticity_token: #{matches[1]}\n"
+		form_values = {
+			"user[email]" => params[:userid],
+			"user[password]" => params[:pass],
+			"authenticity_token" => matches[1]
+		}
+		print "posting to login: #{form_values}\n"
+		req = mechanize.post(login, form_values, {'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept' => "text/html"})
+		print "got login: #{req.code}\n"
+		if (req.code.to_i >= 400)
+		  print "error #{req.code}\n"
+		  abort "error posting login"
+		end
+		string_stream = StringIO.new
+		print "streaming cookies\n"
+		mechanize.cookie_jar.save(string_stream, session: true)
+		["This is the dev security question", string_stream.string, {}]
 	end
 
 	def security_answer_post(params)
+		print "#{Rails.application.config.eager_load}\n"
+		print "In VisitsController.answer_security_question\n"
+		print "#{params}\n"
+		security_answer = params[:security_answer]
+		print "got security_answer\n"
+		id = params.values_at(:id)
 
+		visit = Visit.find_by(id: id)
+		if visit == nil
+			raise "Not Found"
+		end
+		print visit
+		print "************* hidden_fields: #{visit[:hidden_fields]}\n"
+
+		mechanize = Mechanize.new
+		mechanize.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+		print "building string reader\n"
+		reader = StringIO.new(visit["cookies"], "r")
+		print "loading cookie_jar\n"
+		mechanize.cookie_jar.load(reader)
+		print "cookies:\n"
+		print mechanize.cookies
+		print "\n"
+
+		print mechanize.cookies
+		session_id = ''
+		cookies = mechanize.cookies
+		cookies.each do |c|
+		  print "domain #{c}\n"
+		  if c.domain == cookie_domain
+		    if c.name == cookie_name
+		      session_id = c.value
+		    end
+		  end
+		end
+
+		print "#{id}\n"
+		print "#{security_answer}"
+		{session_id: session_id, enroll_server: enroll_url}
 	end
 end
 
@@ -232,6 +342,8 @@ class VisitsController < ApplicationController
 	end
 
 	def create
+		print "In VisitsController.create\n"
+
 		email, password, device_id = params_for_create.values_at(:userid, :password, :device_id)
 
 		host = 'http://10.36.27.236:3000'
@@ -274,7 +386,8 @@ class VisitsController < ApplicationController
 	end
 
 	def params_for_create
-		params.permit(:userid, :password, :device_id)
+		print "In VisitsController.params_for_create\n"
+		params.permit(:userid, :pass, :device_id)
 	end
 
 	def authenticate?(email, password)

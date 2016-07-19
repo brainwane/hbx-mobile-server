@@ -40,6 +40,7 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
+  config.enroll_url = 'https://preprod.dchealthlink.com'
   config.mobile_url_home = 'https://preprod.dchealthlink.com'
   config.mobile_url_iam_login_form = 'https://preprod.dchealthlink.com/login-sso'
   config.mobile_url_iam_login = 'https://webpp.dchealthlink.com/oaam_server/loginAuth.do'
