@@ -84,6 +84,7 @@ class ProdAndTestServerConfig
 
 
 		form_values = {:clientOffset =>-4 ,:userid => params[:userid], :pass=>params[:pass]}
+		print "Post parameters: #{form_values}"
 		req = mechanize.post(iam_login, form_values)
 		print "got iam_login: #{req.code}\n"
 		if (req.code.to_i >= 400)
@@ -105,6 +106,9 @@ class ProdAndTestServerConfig
 
 		# Check to see if we successfully submitted username & password...
 		error_matches = body.include?("<label for=\"userid\">Username<\/label>")
+
+		print "body from login post:\n#{body}\n************\n"
+
 		print "include done\n"
 		if error_matches
 			print "raising\n"
@@ -192,16 +196,18 @@ class ProdAndTestServerConfig
 		session_id = {}
 		cookies = mechanize.cookies
 		cookies.each do |c|
-		  print "domain #{c}\n"
-		  if c.domain == cookie_domain
-		    if c.name == cookie_name
-		      session_id = c.value
-		    end
+		  print "domain: ->#{c.domain}<- name: ->#{c.name}<-\n"
+		  print "cookie name comparison: #{cookie_name}\n"
+		  print "cookie name: #{c.name}\n"
+		  if c.name == cookie_name
+		  	print "cookie name: #{cookie_name}\n"
+		    session_id = c.value
 		  end
 		end
 
 		print "#{id}\n"
-		print "#{security_answer}"
+		print "#{security_answer}\n"
+		print "session_id #{session_id}\n"
 		{session_id: session_id, enroll_server: enroll_url}
 
 	end
@@ -368,12 +374,15 @@ class VisitsController < ApplicationController
 			abort
 		end	
 
+		print "checking security_question\n"
 		if security_question == nil
 			render :json => {error: "Not authorized", :status => 401}
 		else
 			@test = "token_time"
 			#render :json => {session_key: cookie, csrf: token}
+			print "calling first_or_create\n"
 			visit = Visit.where(email: email).first_or_create
+			print "back from first_or_create\n"
 			visit["device_id"] = device_id
 			visit["cookies"] = cookies
 			visit["hidden_fields"] = hidden_values

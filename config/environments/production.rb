@@ -76,4 +76,16 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+
+  config.enroll_url = 'https://enroll.dchealthlink.com'
+  config.mobile_url_home = 'https://www.dchealthlink.com'
+  config.mobile_url_iam_login_form = 'https://www.dchealthlink.com/login-sso'
+  config.mobile_url_iam_login = 'https://app.dchealthlink.com/oaam_server/loginAuth.do'
+  config.mobile_url_iam_login_auth_jump = 'https://app.dchealthlink.com/oaam_server/authJump.do?jump=false'
+  config.mobile_url_iam_challenge_user = 'https://app.dchealthlink.com/oaam_server/challengeUser.do'
+
+  config.session_id_cookie_domain = 'https://preprod.dchealthlink.com'
+  config.session_id_cookie_name = '_session_id'
+
 end

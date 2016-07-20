@@ -47,4 +47,7 @@ Rails.application.configure do
   config.mobile_url_iam_login_auth_jump = 'https://webpp.dchealthlink.com/oaam_server/authJump.do?jump=false'
   config.mobile_url_iam_challenge_user = 'https://webpp.dchealthlink.com/oaam_server/challengeUser.do'
 
+  config.session_id_cookie_domain = 'https://preprod.dchealthlink.com'
+  config.session_id_cookie_name = '_session_id'
+
 end
