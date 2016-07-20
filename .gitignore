@@ -17,4 +17,4 @@
 /tmp
 
 test_scripts/out
-config/secrets.yml
+#config/secrets.yml
