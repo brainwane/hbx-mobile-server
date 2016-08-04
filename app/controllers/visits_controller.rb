@@ -8,7 +8,7 @@ require 'json'
 
 #for ease of reading logs
 def prefixed(multiline_text, prefix)
-	multiline_text.split.map { |line| "#{prefix}#{line}" }.join "\n"
+	multiline_text.split("\n").map { |line| "#{prefix}#{line}" }.join "\n"
 end
 
 
