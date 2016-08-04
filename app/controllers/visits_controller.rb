@@ -6,6 +6,10 @@ require 'mechanize'
 require 'json'
 
 
+#for ease of reading logs
+def prefixed(multiline_text, prefix)
+	multiline_text.split.map { |line| "#{prefix}#{line}" }.join "\n"
+end
 
 
 def capture_form(form_url, filename, params='')
@@ -107,7 +111,7 @@ class ProdAndTestServerConfig
 		# Check to see if we successfully submitted username & password...
 		error_matches = body.include?("<label for=\"userid\">Username<\/label>")
 
-		print "body from login post:\n#{body}\n************\n"
+		print "body from login post:\n#{prefixed(body, "%%% ")}\n************\n"
 
 		print "include done\n"
 		if error_matches
