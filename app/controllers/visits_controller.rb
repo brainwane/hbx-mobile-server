@@ -65,6 +65,7 @@ class ProdAndTestServerConfig
 
 
 	def username_password_post(email, password, params)
+		$stdout.sync = true # force autoflush to see logs for debugging
 		print "ProdAndTestServerConfig.user_password_post\n"
 		mechanize = Mechanize.new
 		mechanize.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
