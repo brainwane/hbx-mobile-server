@@ -148,16 +148,16 @@ class ProdAndTestServerConfig
 	end
 
 	def security_answer_post(params)
-		print "#{Rails.application.config.eager_load}\n"
+		print "eager load = #{Rails.application.config.eager_load}\n"
 		print "In VisitsController.answer_security_question\n"
-		print "#{params}\n"
+		print "with params: #{params}\n"
 		security_answer = params[:security_answer]
 		print "got security_answer\n"
 		id = params.values_at(:id)
 
 		visit = Visit.find_by(id: id)
 		if visit == nil
-			raise "Not Found"
+			raise "Corresponding visit not found, erroneous request"
 		end
 		print visit
 		print "************* hidden_fields: #{visit[:hidden_fields]}\n"
@@ -169,14 +169,12 @@ class ProdAndTestServerConfig
 		reader = StringIO.new(visit["cookies"], "r")
 		print "loading cookie_jar\n"
 		mechanize.cookie_jar.load(reader)
-		print "cookies:\n"
-		print mechanize.cookies
-		print "\n"
+		print "cookies:\n #{mechanize.cookies}\n"
 		form_values = {:register=>'Continue', :Bharosa_Challenge_PadDataField => security_answer }
 		print "parsing json: #{visit[:hidden_fields]}\n"
 
 		hidden_fields = JSON.parse(visit[:hidden_fields])
-		print "foreach hidden_fields\n"
+		print "storing each hidden field into the form values hash\n"
 		hidden_fields.each { |key, value|
 			form_values[key] = value
 		}
@@ -195,23 +193,21 @@ class ProdAndTestServerConfig
 
 		print "finished manual redirects\n"
 		mechanize.redirect_ok = true
-		print "#{req.forms}\n"
+		print "req.forms: #{req.forms}\n"
 		req = req.forms.first.submit
 		session_id = {}
 		cookies = mechanize.cookies
 		cookies.each do |c|
-		  print "domain: ->#{c.domain}<- name: ->#{c.name}<-\n"
-		  print "cookie name comparison: #{cookie_name}\n"
-		  print "cookie name: #{c.name}\n"
+		  print ">> trying to find #{cookie_name}, examining #{c.name} of #{c.domain} [#{c.to_s}]\n"
 		  if c.name == cookie_name
-		  	print "cookie name: #{cookie_name}\n"
+		  	print ">>> found match for #{cookie_name}, storing session id  #{c.value}\n"
 		    session_id = c.value
 		  end
 		end
 
-		print "#{id}\n"
-		print "#{security_answer}\n"
-		print "session_id #{session_id}\n"
+		print """caller responded to login/#{id} with security_answer #{security_answer}, returning:
+		         session_id #{session_id}, enroll_server #{enroll_url}\n
+		"""
 		{session_id: session_id, enroll_server: enroll_url}
 
 	end
