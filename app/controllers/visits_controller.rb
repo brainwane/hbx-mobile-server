@@ -282,6 +282,7 @@ class DevServerConfig
 
         print "******************************\nreturned from mechanize.post: \n"
 		p req
+		p req.response
         print "******************************\n"
 
 		string_stream = StringIO.new
