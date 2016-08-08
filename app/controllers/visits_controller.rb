@@ -262,6 +262,10 @@ class DevServerConfig
 		  abort "error getting login page"
 		end
 
+ 		print "******************************\nreturned from mechanize.GET: \n"
+		p req
+		p req.response
+        print "******************************\n"
 		
 
 		body = req.body
