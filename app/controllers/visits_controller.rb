@@ -262,6 +262,7 @@ class DevServerConfig
 		  abort "error getting login page"
 		end
 
+		
 
 		body = req.body
 		matches = /<meta name=\"csrf-token\" content=\"([^"]+)\"/.match(body)
@@ -278,6 +279,11 @@ class DevServerConfig
 		  print "error #{req.code}\n"
 		  abort "error posting login"
 		end
+
+        print "******************************\nreturned from mechanize.post: \n"
+		p req
+        print "******************************\n"
+
 		string_stream = StringIO.new
 		print "streaming cookies\n"
 		mechanize.cookie_jar.save(string_stream, session: true)
