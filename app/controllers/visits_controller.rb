@@ -254,7 +254,7 @@ class DevServerConfig
 		  abort "error getting login page"
 		end
 		
-		print "getting login form\n"
+		print "getting login form at #{login_form}\n"
 		req = mechanize.get(login_form)
 		print "got login form: #{req.code}\n"
 		if (req.code.to_i >= 400)
@@ -271,7 +271,7 @@ class DevServerConfig
 			"user[password]" => params[:pass],
 			"authenticity_token" => matches[1]
 		}
-		print "posting to login: #{form_values}\n"
+		print "posting to login(#{login}): #{form_values}\n"
 		req = mechanize.post(login, form_values, {'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept' => "text/html"})
 		print "got login: #{req.code}\n"
 		if (req.code.to_i >= 400)
