@@ -262,9 +262,12 @@ class DevServerConfig
 		  abort "error getting login page"
 		end
 
+		get_cookies_stream = StringIO.new
+		mechanize.cookie_jar.save(get_cookies_stream, session: true)
  		print "******************************\nreturned from mechanize.GET: \n"
 		p req
 		p req.response
+		print "Cookies: #{ get_cookies_stream.string }"
         print "******************************\n"
 		
 
