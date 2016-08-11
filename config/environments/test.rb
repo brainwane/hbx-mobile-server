@@ -40,14 +40,17 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  config.enroll_url = 'https://preprod.dchealthlink.com'
-  config.mobile_url_home = 'https://preprod.dchealthlink.com'
-  config.mobile_url_iam_login_form = 'https://preprod.dchealthlink.com/login-sso'
-  config.mobile_url_iam_login = 'https://webpp.dchealthlink.com/oaam_server/loginAuth.do'
-  config.mobile_url_iam_login_auth_jump = 'https://webpp.dchealthlink.com/oaam_server/authJump.do?jump=false'
-  config.mobile_url_iam_challenge_user = 'https://webpp.dchealthlink.com/oaam_server/challengeUser.do'
+  config.enroll_url = 'https://enroll-feature.dchbx.org'
+  config.mobile_url_home = 'https://www.dchealthlink.com'
+  config.mobile_url_iam_login_form = 'https://www.dchealthlink.com/login-sso'
+  config.mobile_url_iam_login = 'https://app.dchealthlink.com/oaam_server/loginAuth.do'
+  config.mobile_url_iam_login_auth_jump = 'https://app.dchealthlink.com/oaam_server/authJump.do?jump=false'
+  config.mobile_url_iam_challenge_user = 'https://app.dchealthlink.com/oaam_server/challengeUser.do'
 
-  config.session_id_cookie_domain = 'https://preprod.dchealthlink.com'
+  config.session_id_cookie_domain = 'enroll-feature.dchbx.org'
   config.session_id_cookie_name = '_session_id'
+
+  #to use production IAM with a test enroll instance, override where the SAML is posted to  
+  config.override_saml_enroll_url = 'enroll-feature.dchbx.org'
 
 end
