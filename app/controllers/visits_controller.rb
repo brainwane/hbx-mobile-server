@@ -348,7 +348,6 @@ class VisitsController < ApplicationController
 
 	@server_config
 
-
 	def initialize
 		@server_config = ""
 		if Rails.env.development?
@@ -404,7 +403,9 @@ class VisitsController < ApplicationController
 			visit["cookies"] = cookies
 			visit["hidden_fields"] = hidden_values
 			visit.save
-			render :json => {security_question: security_question }, :status =>  202, :location => "/login/#{visit.id}"
+			render :json => {security_question: security_question },
+			       :status =>  202,
+			       :location => "#{request.env['REQUEST_URI']}/#{visit.id}" # assumes routing: /login, /login/[id]
 		end
 	end
 
