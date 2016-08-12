@@ -403,9 +403,9 @@ class VisitsController < ApplicationController
 			visit["cookies"] = cookies
 			visit["hidden_fields"] = hidden_values
 			visit.save
-			render :json => {security_question: security_question }, 
-			       :status =>  202, 
-			       :location => "#{request.env['REQUEST_URI']}/#{visit.id}"
+			render :json => {security_question: security_question },
+			       :status =>  202,
+			       :location => "#{request.env['REQUEST_URI']}/#{visit.id}" # assumes routing: /login, /login/[id]
 		end
 	end
 
