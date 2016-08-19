@@ -24,16 +24,11 @@ def capture_form(form_url, filename, params='')
 #STDOUT.puts err
 #URI::encode(str)
 
+
 	[cookie, token]
 end
 
-def find_cookie_value(cookies, name, domain)
-	print "looking for a cookie named #{name} with domain #{domain} in cookies #{cookies.inspect}\n\n"
-	cookie = cookies.find { |c| c.domain == domain && c.name == name }
-	if cookie
-		cookie.value
-	end
-end
+
 
 class ProdAndTestServerConfig
 	def iam_home
@@ -57,7 +52,7 @@ class ProdAndTestServerConfig
 	end
 
 	def enroll_url
-		Rails.configuration.enroll_url
+		'https://enroll.dchealthlink.com/'
 	end
 
 	def cookie_domain
@@ -68,9 +63,6 @@ class ProdAndTestServerConfig
 		Rails.configuration.session_id_cookie_name
 	end
 
-	def override_saml_enroll_url
-		Rails.configuration.override_saml_enroll_url
-	end
 
 	def username_password_post(email, password, params)
 		$stdout.sync = true # force autoflush to see logs for debugging
@@ -138,13 +130,22 @@ class ProdAndTestServerConfig
 		show_view_value = html_entities.decode(matches[1])
 		print "matching again\n"
 		matches = /<input type="hidden" name="fk" value="([^"]*)" \/>/.match(body)
+		print "finshed matching fk field\n"
+		print "matches[1]: #{matches[1]}\n"
 		fk = html_entities.decode(matches[1])
+
 		hidden_values = {:fk => fk, :showView => show_view_value }
 
-		# go see Ruchi
+		
+		#matches = /<h3>([^\<]+)<\/h3>/.match(body)
+		
+		print "about the parse with xpath looking for: //div[@class='challengeUser']"
+		pathResult = req.parser.xpath("//div[@class='text-center width-100']")
+		print "to_html: #{pathResult}"
+		question = pathResult.text.strip
+		print "question: #{question}\n"
 
-		matches = /<h3>([^\<]+)<\/h3>/.match(body)
-		question = html_entities.decode(matches[1])
+		#question = html_entities.decode(matches[1])
 		print "question #{question}\n"
 		print "showViewValue: #{show_view_value}\n"
 		print "fk: #{fk}\n"
@@ -193,7 +194,7 @@ class ProdAndTestServerConfig
 		mechanize.redirect_ok = false
 		req = mechanize.post(iam_challenge_user, form_values)
 		code = req.code.to_i
-		while code >= 300 && code < 400	  
+		while code >= 300 && code < 400
 		  location = req.response['location']
 		  print "redirecting to #{location}\n"
 		  req = mechanize.get location
@@ -203,19 +204,16 @@ class ProdAndTestServerConfig
 		print "finished manual redirects\n"
 		mechanize.redirect_ok = true
 		print "req.forms: #{req.forms}\n"
-
-		form = req.forms.first	
-
-		#to use production IAM with a test enroll instance, override where the SAML is posted to	
-		if override_saml_enroll_url
-			form.action = form.action.gsub("enroll.dchealthlink.com", override_saml_enroll_url)
-			form.RelayState = form.RelayState.gsub("enroll.dchealthlink.com", override_saml_enroll_url)
-		end
-
-		req = form.submit
+		req = req.forms.first.submit
 		session_id = {}
 		cookies = mechanize.cookies
-		session_id = find_cookie_value(cookies, cookie_name, cookie_domain)
+		cookies.each do |c|
+		  print ">> trying to find #{cookie_name}, examining #{c.name} of #{c.domain} [#{c.to_s}]\n"
+		  if c.name == cookie_name
+		  	print ">>> found match for #{cookie_name}, storing session id  #{c.value}\n"
+		    session_id = c.value
+		  end
+		end
 
 		print """caller responded to login/#{id} with security_answer #{security_answer}, returning:
 		         session_id #{session_id}, enroll_server #{enroll_url}\n
@@ -224,6 +222,8 @@ class ProdAndTestServerConfig
 
 	end
 end
+
+
 
 class DevServerConfig
 	def home
@@ -336,7 +336,14 @@ class DevServerConfig
 		print mechanize.cookies
 		session_id = ''
 		cookies = mechanize.cookies
-		session_id = find_cookie_value(cookies, cookie_name, cookie_domain)
+		cookies.each do |c|
+		  print "domain #{c}\n"
+		  if c.domain == cookie_domain
+		    if c.name == cookie_name
+		      session_id = c.value
+		    end
+		  end
+		end
 
 		print "#{id}\n"
 		print "#{security_answer}"
@@ -347,6 +354,7 @@ end
 class VisitsController < ApplicationController
 
 	@server_config
+
 
 	def initialize
 		@server_config = ""
@@ -403,9 +411,7 @@ class VisitsController < ApplicationController
 			visit["cookies"] = cookies
 			visit["hidden_fields"] = hidden_values
 			visit.save
-			render :json => {security_question: security_question },
-			       :status =>  202,
-			       :location => "#{request.env['REQUEST_URI']}/#{visit.id}" # assumes routing: /login, /login/[id]
+			render :json => {security_question: security_question }, :status =>  202, :location => "/login/#{visit.id}"
 		end
 	end
 
