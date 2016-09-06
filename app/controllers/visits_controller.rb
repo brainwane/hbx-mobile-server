@@ -141,11 +141,14 @@ class ProdAndTestServerConfig
 		fk = html_entities.decode(matches[1])
 		hidden_values = {:fk => fk, :showView => show_view_value }
 
-		# go see Ruchi
+		# searching for security question
 
-		matches = /<h3>([^\<]+)<\/h3>/.match(body)
-		question = html_entities.decode(matches[1])
-		print "question #{question}\n"
+		print "about the parse with xpath looking for: //div[@class='challengeUser']\n"
+		pathResult = req.parser.xpath("//div[@class='text-center width-100']")
+		print "to_html: #{pathResult}\n"
+		question = pathResult.text.strip
+		print "question: #{question}\n"
+
 		print "showViewValue: #{show_view_value}\n"
 		print "fk: #{fk}\n"
 		print "***got auth Jump\n"
