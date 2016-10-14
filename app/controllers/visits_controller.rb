@@ -130,14 +130,22 @@ class ProdAndTestServerConfig
 
 		# Username & password submission were successfull!
 
-		print "matching\n"
-		matches = /<input type=\"hidden\" name=\"showView\" value=\"([^"]*)\" \/>/.match(body)
+		print "matching body, looking for showView value\n"
+		if body == nil
+			print "body is nil!!!\n"
+		else
+			print "body is not null\n"
+		end
+		matches = /<input\s+type=\"hidden\"\s+name=\"showView\"\s+value=\"([^"]*)\"/.match(body)
+		if matches == nil
+			print "matches is nil\n"
+		end
 		print "decoding: #{matches}\n"
 		print "decoding: #{matches[0]}\n"
 		print "decoding: #{matches[1]}\n"
 		show_view_value = html_entities.decode(matches[1])
 		print "matching again\n"
-		matches = /<input type="hidden" name="fk" value="([^"]*)" \/>/.match(body)
+		matches = /<input type="hidden" name="fk" value="([^"]*)"/.match(body)
 		fk = html_entities.decode(matches[1])
 		hidden_values = {:fk => fk, :showView => show_view_value }
 
