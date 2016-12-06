@@ -64,6 +64,18 @@ class ProdAndTestServerConfig
 		Rails.configuration.session_id_cookie_domain
 	end
 
+	def broker_endpoint
+		Rails.configuration.broker_endpoint
+	end
+
+	def employer_details_endpoint
+		Rails.configuration.employer_details_endpoint
+	end
+
+	def employee_roster_endpoint
+		Rails.configuration.employee_roster_endpoint
+	end
+
 	def cookie_name
 		Rails.configuration.session_id_cookie_name
 	end
@@ -229,9 +241,15 @@ class ProdAndTestServerConfig
 		session_id = find_cookie_value(cookies, cookie_name, cookie_domain)
 
 		print """caller responded to login/#{id} with security_answer #{security_answer}, returning:
-		         session_id #{session_id}, enroll_server #{enroll_url}\n
+		         session_id #{session_id}, 
+		         enroll_server #{enroll_url}, 
+		         broker_endpoint: #{broker_endpoint},
+		         employer_details_endpoint: #{employer_details_endpoint}, 
+		         employee_roster_endpoint: #{employee_roster_endpoint} 
 		"""
-		{session_id: session_id, enroll_server: enroll_url}
+		
+		{session_id: session_id, enroll_server: enroll_url, broker_endpoint: broker_endpoint,
+		 employer_details_endpoint: employer_details_endpoint, employee_roster_endpoint: employee_roster_endpoint}
 
 	end
 end

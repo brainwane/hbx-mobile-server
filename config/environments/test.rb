@@ -49,8 +49,13 @@ Rails.application.configure do
 
   config.session_id_cookie_domain = 'enroll-feature.dchbx.org'
   config.session_id_cookie_name = '_session_id'
-
+  
   #to use production IAM with a test enroll instance, override where the SAML is posted to  
   config.override_saml_enroll_url = 'enroll-feature.dchbx.org'
+
+  config.broker_endpoint = 'https://enroll-feature.dchbx.org/api/v1/mobile_api/employers_list'
+  config.employer_details_endpoint = 'https://enroll-feature.dchbx.org/api/v1/mobile_api/employer_details'
+  config.employee_roster_endpoint = 'https://enroll-feature.dchbx.org/api/v1/mobile_api/employee_roster'
+
 
 end

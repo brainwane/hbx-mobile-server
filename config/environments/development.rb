@@ -39,11 +39,15 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  config.enroll_url = 'http://ec2-54-234-22-53.compute-1.amazonaws.com:3000'
-  config.mobile_url_home = 'http://ec2-54-234-22-53.compute-1.amazonaws.com:3000'
-  config.mobile_url_login_form = 'http://ec2-54-234-22-53.compute-1.amazonaws.com:3000/users/sign_in'
-  config.mobile_url_login = 'http://ec2-54-234-22-53.compute-1.amazonaws.com:3000/users/sign_in'
+  config.enroll_url = 'http://mobile.dcmic.org:3000'
+  config.mobile_url_home = 'http://mobile.dcmic.org:3000'
+  config.mobile_url_login_form = 'http://mobile.dcmic.org:3000/users/sign_in'
+  config.mobile_url_login = 'http://mobile.dcmic.org:3000/users/sign_in'
 
-  config.session_id_cookie_domain = 'ec2-54-234-22-53.compute-1.amazonaws.com'
+  config.session_id_cookie_domain = 'mobile.dcmic.org'
   config.session_id_cookie_name = '_session_id'
+
+  config.broker_endpoint = 'mobile.dcmic.org:3000/api/v1/mobile_api/employers_list'
+  config.employer_details_endpoint = 'mobile.dcmic.org:3000/api/v1/mobile_api/employer_details'
+  config.employee_roster_endpoint = 'mobile.dcmic.org:3000/api/v1/mobile_api/employee_roster'
 end
