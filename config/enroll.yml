@@ -1,0 +1,26 @@
+development:
+  security: &defaults
+    enroll_url: 'https://enroll-feature.dchbx.org'
+    mobile_url_home: 'https://www.dchealthlink.com'
+    mobile_url_iam_login_form: 'https://www.dchealthlink.com/login-sso'
+    mobile_url_iam_login: 'https://app.dchealthlink.com/oaam_server/loginAuth.do'
+    mobile_url_iam_login_auth_jump: 'https://app.dchealthlink.com/oaam_server/authJump.do?jump=false'
+    mobile_url_iam_challenge_user: 'https://app.dchealthlink.com/oaam_server/challengeUser.do'
+
+    session_id_cookie_domain: 'enroll-feature.dchbx.org'
+    session_id_cookie_name: '_session_id'
+  
+    # To use production IAM with a test enroll instance, override where the SAML is posted to
+    override_saml_enroll_url: 'enroll-feature.dchbx.org'
+
+    broker_endpoint: 'https://enroll-feature.dchbx.org/api/v1/mobile_api/employers_list'
+    employer_details_endpoint: 'https://enroll-feature.dchbx.org/api/v1/mobile_api/employer_details'
+    employee_roster_endpoint: 'https://enroll-feature.dchbx.org/api/v1/mobile_api/employee_roster'
+  
+test:
+  security:
+    <<: *defaults
+
+production:
+    security:
+      <<: *defaults

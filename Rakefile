@@ -1,6 +1,28 @@
-# Add your own tasks in files placed in lib/tasks ending in .rake,
-# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
+require 'rdoc/task'
+require 'rake/testtask'
+require 'yard'
+require 'mongoid'
 
-require File.expand_path('../config/application', __FILE__)
+env = :test unless ENV['RACK_ENV']
 
-Rails.application.load_tasks
+#
+# Defines the rake tasks.
+#
+
+task :default => "development:run"
+
+# Runs the app locally
+namespace :development do
+  desc 'Run app locally'
+  task run: 'Gemfile.lock' do
+    require_relative 'app'
+    HbxMobileServer.run!
+  end
+end
+
+# Generates the Yard docum entation
+YARD::Rake::YardocTask.new do |t|
+  t.files = ['app.rb', '**/lib/**/*.rb', '**/helpers/*.rb', '**/routes/*.rb', '**/models/*.rb']
+  t.options = ['--protected', '--private']
+end
+
