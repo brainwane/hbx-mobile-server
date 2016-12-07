@@ -232,7 +232,7 @@ class ProdAndTestServerConfig
 		#to use production IAM with a test enroll instance, override where the SAML is posted to	
 		if override_saml_enroll_url
 			form.action = form.action.gsub("enroll.dchealthlink.com", override_saml_enroll_url)
-			form.RelayState = form.RelayState.gsub("enroll.dchealthlink.com", override_saml_enroll_url)
+			form.RelayState = form.RelayState.gsub("enroll.dchealthlink.com", override_saml_enroll_url) if form.methods.include?(:RelayState)
 		end
 
 		req = form.submit
@@ -389,13 +389,18 @@ class VisitsController < ApplicationController
 	end
 
 	def answer_security_question
+	#  begin
 		render :json => @server_config.security_answer_post(params)
+	#  rescue Exception => e
+	#  	render :json => { error: e.inspect }
+    #  end
 	end
 
 	def create
+	  #begin
 		print "In VisitsController.create\n"
-
 		email, password, device_id = params_for_create.values_at(:userid, :password, :device_id)
+		print "got #{email}, #{password}, #{device_id}\n"
 
 		host = 'http://10.36.27.236:3000'
 
@@ -436,6 +441,9 @@ class VisitsController < ApplicationController
 			       :status =>  202,
 			       :location => "#{request.env['REQUEST_URI']}/#{visit.id}" # assumes routing: /login, /login/[id]
 		end
+	  #rescue Exception => e
+	  #	render :json => { error: e.inspect }
+      #end
 	end
 
 	def update
