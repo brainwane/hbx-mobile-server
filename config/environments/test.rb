@@ -40,22 +40,22 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  config.enroll_url = 'https://enroll-feature.dchbx.org'
+  config.enroll_url = 'https://enroll-mobile.dchbx.org'
   config.mobile_url_home = 'https://www.dchealthlink.com'
   config.mobile_url_iam_login_form = 'https://www.dchealthlink.com/login-sso'
   config.mobile_url_iam_login = 'https://app.dchealthlink.com/oaam_server/loginAuth.do'
   config.mobile_url_iam_login_auth_jump = 'https://app.dchealthlink.com/oaam_server/authJump.do?jump=false'
   config.mobile_url_iam_challenge_user = 'https://app.dchealthlink.com/oaam_server/challengeUser.do'
 
-  config.session_id_cookie_domain = 'enroll-feature.dchbx.org'
+  config.session_id_cookie_domain = 'enroll-mobile.dchbx.org'
   config.session_id_cookie_name = '_session_id'
   
   #to use production IAM with a test enroll instance, override where the SAML is posted to  
-  config.override_saml_enroll_url = 'enroll-feature.dchbx.org'
+  config.override_saml_enroll_url = 'enroll-mobile.dchbx.org'
 
-  config.broker_endpoint = 'https://enroll-feature.dchbx.org/api/v1/mobile_api/employers_list'
-  config.employer_details_endpoint = 'https://enroll-feature.dchbx.org/api/v1/mobile_api/employer_details'
-  config.employee_roster_endpoint = 'https://enroll-feature.dchbx.org/api/v1/mobile_api/employee_roster'
+  config.broker_endpoint = 'https://enroll-mobile.dchbx.org/api/v1/mobile_api/employers_list'
+  config.employer_details_endpoint = 'https://enroll-mobile.dchbx.org/api/v1/mobile_api/employer_details'
+  config.employee_roster_endpoint = 'https://enroll-mobile.dchbx.org/api/v1/mobile_api/employee_roster'
 
 
 end
